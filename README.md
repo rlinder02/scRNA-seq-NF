@@ -100,11 +100,11 @@ At the command line, you can specify several options (documented [here](https://
 
 Currently, default STAR parameters are set up for 10X 3'v3, v3.1 chemistry using the *3M-february-2018.txt* barcode list. Support for automatic detection of the 10X version will be added in the future. However, for a complete and detailed list of parameters for running STARsolo on multiple types of 10X chemistries, please see [here](https://github.com/cellgeni/STARsolo).
 
-The indexing and alignment/counting processes are currently labelled as `big_mem`. The number of CPUs and requested memory can be changed in the nextflow.config file and depends on the resources available. It is important to remember that, when running on AWS, the number of vCPUs provisioned for a job will not be the same as the number of CPUs reqested in the config file, as there are normally 2+ vCPUs per CPU (exact specifications for a variety of EC2 instances are listed in table form [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cpu-options-supported-instances-values.html)).
+The indexing and alignment/counting processes are currently labelled as `big_mem`. The number of CPUs and requested memory can be changed in the nextflow.config file and depends on the resources available. It is important to remember that, when running on AWS, the number of vCPUs provisioned for a job will not be the same as the number of CPUs reqested in the config file, as there are normally 2+ vCPUs per CPU (exact specifications for a variety of EC2 instance types are listed in table form [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cpu-options-supported-instances-values.html)).
 
 ## Pipeline results
 
-The results are copied to a generic `results` folder, with STARsolo genome indexing results stored in the `index` sub-folder and the STARsolo alignment and count matrix files are stored in `sample_id` sub-folders. The `sample_id` is generated from the part of the fastq file-name that comes before the above-mentioned pattern. 
+The results are copied to a generic `results` folder, with STARsolo genome indexing results stored in the `index` sub-folder and the STARsolo alignment and count matrix files stored in `sample_id` sub-folders. The `sample_id` is generated from the part of the fastq file-name that comes before the above-mentioned pattern. 
 
 ## Credits
 
