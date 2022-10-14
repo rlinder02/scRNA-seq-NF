@@ -63,7 +63,7 @@ This pipeline requires the following gzipped input files:
 
 - 10x RNAseq paired end reads, `*.fastq.gz`
 - Genome fasta, `*.fa.gz`
-- Whitelist of 10x barcodes (should not be gzipped)
+- Whitelist of 10x barcodes `*.txt.gz`
 - Genome annotation file, `*.gtf.gz`
 
 The RNAseq read file names should match the following pattern: _*_R{1,2}_001.{fastq, fq}.gz_
