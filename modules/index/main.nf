@@ -3,6 +3,7 @@ params.outdir = 'results'
 process INDEX {
 	tag "Indexing genome"
 	label 'big_mem'
+	publishDir params.outdir, mode:'copy'
 
 	input:
 	path genome
@@ -14,7 +15,7 @@ process INDEX {
 
 	shell:
 	'''
-	mkdir -p index
+	mkdir index
 	zcat < !{genome} > genome.fa
 	zcat < !{annotations} > annotations.gtf
 	mv genome.fa annotations.gtf index
