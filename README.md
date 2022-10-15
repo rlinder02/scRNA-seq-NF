@@ -39,17 +39,12 @@ The Dockerfile and conda.yaml are included if updated or additional software too
 docker pull rlinder02/starsolo-sc-rnaseq:v0.1.0
 ```
 
-Download the pipeline from GitHub (do not try running directly from GitHub):
+Run the pipeline from GitHub:
 
 ```
-git clone https://github.com/rlinder02/scRNA-seq-NF.git
+nextflow run rlinder02/scRNA-seq-NF -r main
 ```
 
-Run the pipeline:
-
-```
-nextflow run main.nf
-```
 The nextflow.config file ensures that the Docker image is used by default for containerised execution, unless overriden at the command line.
 
 
