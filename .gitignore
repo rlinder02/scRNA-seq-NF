@@ -9,6 +9,7 @@
 /results/*
 /data/*
 /work/*
+/analysis/*
 .nextflow*
 
 ### Groovy ###
