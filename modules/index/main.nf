@@ -34,6 +34,7 @@ process INDEX {
 process INDEX_TEST {
 	tag "Indexing test sample"
 	label 'big_mem'
+	label 'secondary'
 	publishDir params.outdir, mode:'copy'
 	//debug true
 

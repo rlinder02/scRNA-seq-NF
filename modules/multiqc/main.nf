@@ -1,6 +1,7 @@
 params.outdir = 'results'
 
 process MULTIQC {
+	label 'secondary'
 	publishDir params.outdir, mode:'copy'
 
 	input:

@@ -19,6 +19,7 @@ process FASTQC {
 
 process FASTQC_TEST {
 	tag "FASTQC test run"
+	label 'secondary'
 	publishDir params.outdir, mode:'copy'
 
 	input:

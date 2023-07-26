@@ -2,6 +2,7 @@ params.outdir = 'results'
 
 process TEST_GENOME {
 	tag "Testing the pipeline on a subset of the real data"
+	label 'secondary'
 	publishDir params.outdir, mode:'copy'
 
 	input:
@@ -27,6 +28,7 @@ process TEST_GENOME {
 
 process TEST_FASTQS {
 	tag "Subsampling one pair of R1 and R2 fastqs for testing the pipeline"
+	label 'secondary'
 	publishDir params.outdir, mode:'copy'
 
 	input:

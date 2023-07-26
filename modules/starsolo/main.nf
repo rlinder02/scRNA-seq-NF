@@ -71,6 +71,7 @@ process STARSOLO {
 process STARSOLO_TEST {
 	tag "STARsolo on test data"
 	label 'big_mem'
+	label 'secondary'
 	publishDir params.outdir, mode:'copy'
 
 	input:
