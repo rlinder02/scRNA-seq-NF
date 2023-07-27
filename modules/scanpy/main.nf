@@ -19,7 +19,10 @@ process QC_CELLS_TEST {
 	"""
     qc_count_matrix.py "${starsolo}/Gene/filtered"
     cd output/
-    mkdir analyses
+    if [ ! -d "analyses" ]
+    then    
+        mkdir analyses
+    fi
     cd ..
     mv data* output/analyses/
     mv figures output/analyses/

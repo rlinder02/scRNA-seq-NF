@@ -13,6 +13,7 @@ from functools import wraps
 import numpy as np
 import pandas as pd
 import scanpy as sc
+import scvi
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.neighbors import NearestNeighbors
@@ -28,7 +29,7 @@ def parse_args():
 	return args
 
 def pre_process(adata):
-    """Filters and normalizes the data"""
+    """Filters and normalizes the data, starting with doublet removal"""
     adata.var['mt'] = adata.var_names.str.startswith('MT-')
     sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
     sc.pp.filter_cells(adata, min_genes=200)
@@ -41,14 +42,17 @@ def pre_process(adata):
     adata = adata[:, adata.var.highly_variable]
     sc.pp.scale(adata, max_value=10)  
     sc.tl.pca(adata, svd_solver='arpack')
+    sc.pl.pca_variance_ratio(adata, log=True, n_pcs = 50, save='PC_ranking.pdf')
     return adata
 
 def clustering(adata):
     """Clusters the data"""
-    #computing the neighborhood graph
+    ## computing the neighborhood graph using 20 PCs as default
     sc.pp.neighbors(adata, n_neighbors=10, n_pcs=20)
     sc.tl.umap(adata)
-    sc.tl.leiden(adata)
+    sc.pl.umap(adata, save='UMAP.pdf')
+    sc.tl.leiden(adata) 
+    sc.pl.umap(adata, color=['leiden'], save='UMAP_Leiden_overlay.pdf') 
     sc.tl.paga(adata, groups='leiden')
     sc.pl.paga(adata)
     sc.tl.draw_graph(adata, init_pos='paga')
@@ -59,13 +63,13 @@ def dea(adata):
     """Finds differentially expressed genes"""
     sc.tl.rank_genes_groups(adata, 'leiden', method='wilcoxon')
     sc.pl.rank_genes_groups(adata, n_genes=25, sharey=False, save='gene_ranks.pdf')
-    #get a table with scores and groups
+    ## get a table with scores and groups
     result = adata.uns['rank_genes_groups']
     groups = result['names'].dtype.names
     score_df = pd.DataFrame(
         {group + '_' + key[:1]: result[key][group]
         for group in groups for key in ['names', 'pvals']})
-    #compare to a single cluster
+    ## compare to a single cluster
     sc.tl.rank_genes_groups(adata, 'leiden', groups=['0'], reference='1', method='wilcoxon')
     adata.write('data.h5ad', compression='gzip')
     score_df.to_csv('data.csv')
