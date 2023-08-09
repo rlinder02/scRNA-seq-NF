@@ -58,7 +58,8 @@ workflow {
         INDEX_TEST(TEST_GENOME.out)
 		STARSOLO_TEST(TEST_FASTQS.out, INDEX_TEST.out, params.whitelist10k)
         MULTIQC(FASTQC_TEST.out) 
-        QC_CELLS_TEST(STARSOLO_TEST.out)
+        STARSOLO_TEST.out.view()
+        //QC_CELLS_TEST(STARSOLO_TEST.out)
     }
     // } else if (params.tertiary_only == false && params.runtype == "full") { // Runs secondary followed by tertiary analyses of the data
     //     FASTQC(read_pairs_ch)
