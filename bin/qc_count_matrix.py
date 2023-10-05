@@ -29,13 +29,12 @@ def parse_args():
 	args = parser.parse_args()
 	return args
 
-def pre_process(adata):
+def doublet_prediction(adata):
     """Filters count matrices from individual samples, starting with doublet removal"""
-    adata_raw = adata
-    sc.pp.filter_genes(adata_raw, min_cells=3)
-    sc.pp.highly_variable_genes(adata_raw, min_mean=0.0125, max_mean=3, min_disp=0.5)
-    scvi.model.SCVI.setup_anndata(adata_raw)
-    vae = scvi.model.SCVI(adata_raw)
+    sc.pp.filter_genes(adata, min_cells=3)
+    sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
+    scvi.model.SCVI.setup_anndata(adata)
+    vae = scvi.model.SCVI(adata)
     vae.train()
     solo = scvi.external.SOLO.from_scvi_model(vae)
     solo.train()
@@ -44,18 +43,20 @@ def pre_process(adata):
     df.index = df.index.map(lambda x: x[:-2])
     df['dif'] = df.doublet - df.singlet
     doublets = df[(df.prediction == 'doublet') & (df.dif > 1)]
-    adata.obs['doublet'] = adata.obs.index.isin(doublets.index)
-    adata = adata[~adata.obs.doublet]
-    sc.pp.filter_cells(adata, min_genes=200)
-    adata.var['mt'] = adata.var_names.str.startswith('mt-')
-    sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
-    upper_lim = np.quantile(adata.obs.n_genes_by_counts.values, .98)
-    adata = adata[adata.obs.n_genes_by_counts < upper_lim, :]
-    adata = adata[adata.obs.pct_counts_mt < 20, :]
-    return adata
+    return doublets
 
-def combine_samples(sample_ids):
+def combine_samples(adata, doublets, sample_ids):
      """Concatenates count matrices from multiple samples into a single count matrix, then filter, normalize, transform, and continue to process the data"""
+     adata.obs['doublet'] = adata.obs.index.isin(doublets.index)
+     adata = adata[~adata.obs.doublet]
+     sc.pp.filter_cells(adata, min_genes=200)
+     adata.var['mt'] = adata.var_names.str.startswith('mt-')
+     sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
+     upper_lim = np.quantile(adata.obs.n_genes_by_counts.values, .98)
+     adata = adata[adata.obs.n_genes_by_counts < upper_lim, :]
+     adata = adata[adata.obs.pct_counts_mt < 20, :]
+     return adata 
+     
      sc.pp.normalize_total(adata, target_sum=1e4)
      sc.pp.log1p(adata)
      sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
