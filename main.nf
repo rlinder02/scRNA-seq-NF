@@ -15,7 +15,7 @@ nextflow.enable.dsl = 2
  * given `params.foo` specify on the run command line `--foo some_value`.
  */
 
-params.reads = "$projectDir/assets/*_R{1,2}_001.{fastq,fq}.gz"
+params.reads = "$projectDir/full_assets/5k_human_jejunum_CNIK_3pv3_fastqs/*_R{1,2}_001.{fastq,fq}.gz"
 params.genome = "$projectDir/assets/GRCh38.primary_assembly.genome.fa.gz"
 params.annotations = "$projectDir/assets/gencode.v32.primary_assembly.annotation.gtf.gz"
 params.whitelist10k = "$projectDir/assets/3M-february-2018.txt.gz"
